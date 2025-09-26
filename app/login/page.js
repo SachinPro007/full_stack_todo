@@ -2,13 +2,12 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-const RegistrationPage = () => {
+const LoginPage = () => {
   const [formData, setFormData] = useState({
-    name: '',
     email: '',
-    password: '',
-    confirmPassword: ''
+    password: ''
   });
+  
   const [serverResponse, setServerResponse] = useState({});
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
@@ -32,12 +31,6 @@ const RegistrationPage = () => {
   const validateForm = () => {
     const newErrors = {};
 
-    if (!formData.name.trim()) {
-      newErrors.name = 'Name is required';
-    } else if (formData.name.length < 2) {
-      newErrors.name = 'Name must be at least 2 characters';
-    }
-
     if (!formData.email.trim()) {
       newErrors.email = 'Email is required';
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
@@ -46,14 +39,6 @@ const RegistrationPage = () => {
 
     if (!formData.password) {
       newErrors.password = 'Password is required';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
-    }
-
-    if (!formData.confirmPassword) {
-      newErrors.confirmPassword = 'Please confirm your password';
-    } else if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
     }
 
     setErrors(newErrors);
@@ -63,25 +48,28 @@ const RegistrationPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
+    
     if (!validateForm()) return;
 
     setIsLoading(true);
-    const res = await fetch("/api/register", {
+    const res = await fetch("/api/login", {
       method: "POST",
       headers: {
-        "Content-Type": "appliction/json"
+        "Content-Type" : "application/json"
       },
-      body: JSON.stringify({name: formData.name, email: formData.email, password: formData.password})
+      body: JSON.stringify({email: formData.email, password: formData.password})
     })
 
-    const data = await res.json()
+    const data = await res.json()    
+
     setServerResponse(data)
-    setIsLoading(false)
+    setIsLoading(false);
 
     if(data.success){
-      router.push("/login")
+      router.push("/")
     }
-    
+
+
   };
 
   return (
@@ -89,37 +77,14 @@ const RegistrationPage = () => {
       <div className="container md:w-[50%] mx-auto bg-white rounded-2xl shadow-xl overflow-hidden">
         {/* Header */}
         <div className="bg-gradient-to-r from-blue-600 to-indigo-700 p-6">
-          <h1 className="text-3xl font-bold text-white text-center">Create Account</h1>
+          <h1 className="text-3xl font-bold text-white text-center">Welcome Back</h1>
           <p className="text-blue-200 text-center mt-2">
-            Join us and start organizing your tasks
+            Sign in to your account
           </p>
         </div>
 
-        {/* Registration Form */}
+        {/* Login Form */}
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
-          {/* Name Field */}
-          <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-              Full Name
-            </label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              className={`text-gray-600 w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors duration-200 ${
-                errors.name 
-                  ? 'border-red-500 focus:ring-red-500' 
-                  : 'border-gray-300 focus:ring-blue-500 focus:border-transparent'
-              }`}
-              placeholder="Enter your full name"
-            />
-            {errors.name && (
-              <p className="text-red-500 text-sm mt-1">{errors.name}</p>
-            )}
-          </div>
-
           {/* Email Field */}
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
@@ -166,27 +131,22 @@ const RegistrationPage = () => {
             )}
           </div>
 
-          {/* Confirm Password Field */}
-          <div>
-            <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">
-              Confirm Password
+          {/* Remember Me & Forgot Password */}
+          <div className="flex items-center justify-between">
+            <label className="flex items-center">
+              <input
+                type="checkbox"
+                className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+              />
+              <span className="ml-2 text-sm text-gray-600">Remember me</span>
             </label>
-            <input
-              type="password"
-              id="confirmPassword"
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              className={`text-gray-600 w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors duration-200 ${
-                errors.confirmPassword 
-                  ? 'border-red-500 focus:ring-red-500' 
-                  : 'border-gray-300 focus:ring-blue-500 focus:border-transparent'
-              }`}
-              placeholder="Confirm your password"
-            />
-            {errors.confirmPassword && (
-              <p className="text-red-500 text-sm mt-1">{errors.confirmPassword}</p>
-            )}
+            
+            <button
+              type="button"
+              className="text-sm text-blue-600 hover:text-blue-700 transition-colors duration-200"
+            >
+              Forgot password?
+            </button>
           </div>
 
           {/* Submit Button */}
@@ -201,11 +161,25 @@ const RegistrationPage = () => {
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
-                Creating Account...
+                Signing in...
               </div>
             ) : (
-              'Create Account'
+              'Sign In'
             )}
+          </button>
+
+          {/* Demo Account Button */}
+          <button
+            type="button"
+            onClick={() => {
+              setFormData({
+                email: 'sachintesting@gmail.com',
+                password: 'demopassword123'
+              });
+            }}
+            className="w-full py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors duration-200"
+          >
+            Login with Demo Account
           </button>
 
           {/* Server Error Message */}
@@ -222,16 +196,16 @@ const RegistrationPage = () => {
             </div>
           )}
 
-          {/* Login Link */}
+          {/* Registration Link */}
           <div className="text-center pt-4">
             <p className="text-gray-600">
-              Already have an account?{' '}
+              Don't have an account?{' '}
               <button
                 type="button"
-                onClick={() => router.push('/login')}
+                onClick={() => router.push('/register')}
                 className="text-blue-600 hover:text-blue-700 font-medium"
               >
-                Sign in
+                Sign up
               </button>
             </p>
           </div>
@@ -241,4 +215,4 @@ const RegistrationPage = () => {
   );
 };
 
-export default RegistrationPage;
+export default LoginPage;

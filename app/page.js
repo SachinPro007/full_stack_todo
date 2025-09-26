@@ -1,20 +1,29 @@
 "use client"
+import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 
 const TodoApp = () => {
+  const route = useRouter()
   const [todos, setTodos] = useState([]);
   const [inputValue, setInputValue] = useState('');
   const [filter, setFilter] = useState('all');
   const [editingId, setEditingId] = useState(null); // Track which todo is being edited
   const [editInput, setEditInput] = useState(""); // Store the edited text
+  const [serverResponse ,setServerResponse] = useState({})
 
   const [loading, setLoading] = useState(true)
 
   const fetchTodos = async () => {
     const res = await fetch("/api/todos")
     const data = await res.json()
-    setTodos(data.reverse())
-    setLoading(false)
+
+    if(data.error){
+      setServerResponse(data)
+      route.push("/login")        
+    }else{        
+      setTodos(data.reverse())
+      setLoading(false)
+    }
   }
 
   useEffect(() => {
@@ -30,9 +39,15 @@ const TodoApp = () => {
         },
         body: JSON.stringify({ text: inputValue })
       })
-      const newTodo = await res.json()
-      setTodos([newTodo, ...todos])
-      setInputValue('');
+      const data = await res.json()
+      if(data.error){
+        setServerResponse(data)
+        route.push("/login")
+        
+      }else{
+        setTodos([data, ...todos])
+        setInputValue('');
+      }
     }
   };
 
@@ -97,7 +112,7 @@ const TodoApp = () => {
 
   return (
     <div className=" flex justify-center items-center min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">
-      <div className="max-w-md mx-auto bg-white rounded-2xl shadow-xl overflow-hidden">
+      <div className="container md:w-[60%] mx-auto bg-white rounded-2xl shadow-xl overflow-hidden">
         {/* Header */}
         <div className="bg-gradient-to-r from-blue-600 to-indigo-700 p-6">
           <h1 className="text-3xl font-bold text-white text-center">Todo App</h1>
@@ -135,6 +150,13 @@ const TodoApp = () => {
             </button>
           </div>
         </div>
+
+        {/* Server Error Message */}
+          {serverResponse.error && (
+            <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+              <p className="text-red-600 text-sm text-center">{serverResponse.error}</p>
+            </div>
+          )}
 
         {/* Filter Buttons */}
         <div className="flex border-b border-gray-200">
