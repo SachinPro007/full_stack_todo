@@ -1,5 +1,6 @@
 import { db } from "@/config/db"
 import { cookies } from "next/headers"
+import { useridSignCookie } from "@/config/auth"
 
 
 export async function POST(request) {
@@ -13,7 +14,7 @@ export async function POST(request) {
       return Response.json({ error: "Invalid Credentials!" }, { status: 400 })
     }
 
-    cookieStore.set("userID", user.id, { httpOnly: true, maxAge: 60 * 60 })
+    cookieStore.set("userID", useridSignCookie(user.id), { httpOnly: true, maxAge: 60 * 60 })
     return Response.json({ success: "Loggin Success" }, { status: 200 })
 
   } catch (error) {

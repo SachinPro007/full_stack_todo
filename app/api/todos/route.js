@@ -1,28 +1,25 @@
+import { verifyCookie } from "@/config/auth"
 import { db } from "@/config/db"
 import { cookies } from "next/headers"
 
 
-
 export async function GET() {
-  const cookiesStore = await cookies()
-  const userID = cookiesStore.get("userID")?.value
-
-  if(!userID){
-    return Response.json({error: "Please Login First...!"}, {status: 401})
+    
+  const useridOrCookieRes = await verifyCookie()
+  if(useridOrCookieRes instanceof Response){
+    return useridOrCookieRes
   }
-  
 
-  const [todos] = await db.execute("SELECT * FROM todos_data;")
-  const filterTodos = todos.filter(todo => todo.userID === userID)
-
-  return Response.json(filterTodos)
+  const [todos] = await db.execute("SELECT * FROM todos_data WHERE userID = ?;", [useridOrCookieRes])
+  return Response.json(todos)
 }
 
 
 export async function POST(request) {
   const todo = await request.json()
   const cookiesStore = await cookies()
-  const userID = cookiesStore.get("userID")?.value
+  const [userID, cookieSignature] = cookiesStore.get("userID")?.value.split(".")
+  
 
   if(userID){
     const [[user]] = await db.execute("SELECT * FROM users WHERE id = ?;", [userID])
