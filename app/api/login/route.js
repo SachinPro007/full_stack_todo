@@ -14,7 +14,12 @@ export async function POST(request) {
       return Response.json({ error: "Invalid Credentials!" }, { status: 400 })
     }
 
-    cookieStore.set("userID", useridSignCookie(user.id), { httpOnly: true, maxAge: 60 * 60 })
+    await db.execute("INSERT INTO session (id, userID) VALUES (?, ?);", [crypto.randomUUID(), user.id])
+    const [[session]] = await db.execute("SELECT * FROM session WHERE userID = ?;", [user.id])    
+        
+    
+
+    cookieStore.set("userID", useridSignCookie(session.id), { httpOnly: true, maxAge: 60 * 60 })
     return Response.json({ success: "Loggin Success" }, { status: 200 })
 
   } catch (error) {
