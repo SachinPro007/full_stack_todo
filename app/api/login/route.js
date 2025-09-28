@@ -1,16 +1,19 @@
 import { db } from "@/config/db"
 import { cookies } from "next/headers"
 import { sessionSignCookie } from "@/config/auth"
+import bcrypt from "bcrypt"
 
 
 export async function POST(request) {
   const { email, password } = await request.json()
-  const cookieStore = await cookies()
+  const cookieStore = await cookies()  
 
   try {
     const [[user]] = await db.execute("SELECT * FROM users WHERE email = ?;", [email])
+    
+    const validPassword = await bcrypt.compare(password, user.password)
 
-    if (!user && user?.password !== password) {
+    if (!user && !validPassword) {
       return Response.json({ error: "Invalid Credentials!" }, { status: 400 })
     }
 
