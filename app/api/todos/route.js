@@ -26,16 +26,13 @@ export async function GET() {
 
 export async function POST(request) {
   const todo = await request.json()
-  const cookiesStore = await cookies()
-  const [sessionID, cookieSignature] = cookiesStore.get("userID")?.value.split(".")
-
-  if(!sessionID){
-    return Response.json({error: "Please Login"}, {status: 401})
+  const sessionID = await verifyCookie()
+  
+  if(sessionID instanceof Response){
+    return sessionID
   }
 
-  const [[userSession]] = await db.execute("SELECT * FROM session WHERE id = ?;", [sessionID])
-  console.log("userSession: ", userSession);
-  
+  const [[userSession]] = await db.execute("SELECT * FROM session WHERE id = ?;", [sessionID])  
 
   if(userSession){
     const [[user]] = await db.execute("SELECT * FROM users WHERE id = ?;", [userSession.userID])

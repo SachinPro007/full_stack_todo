@@ -1,6 +1,6 @@
 import { db } from "@/config/db"
 import { cookies } from "next/headers"
-import { useridSignCookie } from "@/config/auth"
+import { sessionSignCookie } from "@/config/auth"
 
 
 export async function POST(request) {
@@ -15,11 +15,10 @@ export async function POST(request) {
     }
 
     await db.execute("INSERT INTO session (id, userID) VALUES (?, ?);", [crypto.randomUUID(), user.id])
-    const [[session]] = await db.execute("SELECT * FROM session WHERE userID = ?;", [user.id])    
-        
+    const [[session]] = await db.execute("SELECT * FROM session WHERE userID = ?;", [user.id])            
     
 
-    cookieStore.set("userID", useridSignCookie(session.id), { httpOnly: true, maxAge: 60 * 60 })
+    cookieStore.set("userID", sessionSignCookie(session.id), { httpOnly: true, maxAge: 60 * 60 })
     return Response.json({ success: "Loggin Success" }, { status: 200 })
 
   } catch (error) {
