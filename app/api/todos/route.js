@@ -1,12 +1,10 @@
 import { verifyCookie } from "@/config/auth"
 import { db } from "@/config/db"
-import { cookies } from "next/headers"
 
 
 export async function GET() {
     
   const sessionIdRes = await verifyCookie()
-  // console.log(sessionIdRes);
   
   if(sessionIdRes instanceof Response){
     return sessionIdRes
@@ -17,7 +15,6 @@ export async function GET() {
   if(!session){
     return Response.json({error: "Please Login First...!"}, {status: 401})
   }
-  
 
   const [todos] = await db.execute("SELECT * FROM todos_data WHERE userID = ?;", [session.userID])
   return Response.json(todos)
@@ -41,8 +38,7 @@ export async function POST(request) {
     }
   }else{
     return Response.json({error: "Your loggin session is expier, Please login first...!"}, {status: 401})
-  }
-  
+  }  
   
   const newTodo = {
     id: crypto.randomUUID(),

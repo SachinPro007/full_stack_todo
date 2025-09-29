@@ -6,14 +6,18 @@ import bcrypt from "bcrypt"
 
 export async function POST(request) {
   const { email, password } = await request.json()
-  const cookieStore = await cookies()  
+  const cookieStore = await cookies()
 
   try {
     const [[user]] = await db.execute("SELECT * FROM users WHERE email = ?;", [email])
+
+    if (!user) {
+      return Response.json({ error: "Invalid Credentials!" }, { status: 400 })
+    }
     
     const validPassword = await bcrypt.compare(password, user.password)
 
-    if (!user && !validPassword) {
+    if (!validPassword) {
       return Response.json({ error: "Invalid Credentials!" }, { status: 400 })
     }
 
