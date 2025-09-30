@@ -1,6 +1,9 @@
 "use client"
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { registerSchema } from '@/lib/schema/userSchema';
+import z from 'zod';
+import { ragisterUser } from '../actions/userAction';
 
 const RegistrationPage = () => {
   const [formData, setFormData] = useState({
@@ -62,7 +65,7 @@ const RegistrationPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
 
     setIsLoading(true);
@@ -71,18 +74,40 @@ const RegistrationPage = () => {
       headers: {
         "Content-Type": "appliction/json"
       },
-      body: JSON.stringify({name: formData.name, email: formData.email, password: formData.password})
+      body: JSON.stringify({ name: formData.name, email: formData.email, password: formData.password })
     })
 
     const data = await res.json()
     setServerResponse(data)
     setIsLoading(false)
 
-    if(data.success){
+    if (data.success) {
       router.push("/login")
     }
-    
+
   };
+
+
+
+  // form validate with zod and resigter new user with server action
+  const handleFormAction = async (formData) => {
+    const { success, data, error } = registerSchema.safeParse(Object.fromEntries(formData))
+
+    if (!success) {
+      setErrors(z.flattenError(error).fieldErrors)
+    } else {
+
+      setIsLoading(true);
+      const resData = await ragisterUser(data)
+      setServerResponse(resData)
+      setIsLoading(false)
+
+
+      if (resData.success) {
+        router.push("/login")
+      }
+    }
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4 flex items-center justify-center">
@@ -96,7 +121,7 @@ const RegistrationPage = () => {
         </div>
 
         {/* Registration Form */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+        <form action={handleFormAction} className="p-6 space-y-4">
           {/* Name Field */}
           <div>
             <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
@@ -108,11 +133,10 @@ const RegistrationPage = () => {
               name="name"
               value={formData.name}
               onChange={handleChange}
-              className={`text-gray-600 w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors duration-200 ${
-                errors.name 
-                  ? 'border-red-500 focus:ring-red-500' 
-                  : 'border-gray-300 focus:ring-blue-500 focus:border-transparent'
-              }`}
+              className={`text-gray-600 w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors duration-200 ${errors.name
+                ? 'border-red-500 focus:ring-red-500'
+                : 'border-gray-300 focus:ring-blue-500 focus:border-transparent'
+                }`}
               placeholder="Enter your full name"
             />
             {errors.name && (
@@ -131,11 +155,10 @@ const RegistrationPage = () => {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className={`text-gray-600 w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors duration-200 ${
-                errors.email 
-                  ? 'border-red-500 focus:ring-red-500' 
-                  : 'border-gray-300 focus:ring-blue-500 focus:border-transparent'
-              }`}
+              className={`text-gray-600 w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors duration-200 ${errors.email
+                ? 'border-red-500 focus:ring-red-500'
+                : 'border-gray-300 focus:ring-blue-500 focus:border-transparent'
+                }`}
               placeholder="Enter your email"
             />
             {errors.email && (
@@ -154,11 +177,10 @@ const RegistrationPage = () => {
               name="password"
               value={formData.password}
               onChange={handleChange}
-              className={`text-gray-600 w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors duration-200 ${
-                errors.password 
-                  ? 'border-red-500 focus:ring-red-500' 
-                  : 'border-gray-300 focus:ring-blue-500 focus:border-transparent'
-              }`}
+              className={`text-gray-600 w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors duration-200 ${errors.password
+                ? 'border-red-500 focus:ring-red-500'
+                : 'border-gray-300 focus:ring-blue-500 focus:border-transparent'
+                }`}
               placeholder="Enter your password"
             />
             {errors.password && (
@@ -177,11 +199,10 @@ const RegistrationPage = () => {
               name="confirmPassword"
               value={formData.confirmPassword}
               onChange={handleChange}
-              className={`text-gray-600 w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors duration-200 ${
-                errors.confirmPassword 
-                  ? 'border-red-500 focus:ring-red-500' 
-                  : 'border-gray-300 focus:ring-blue-500 focus:border-transparent'
-              }`}
+              className={`text-gray-600 w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors duration-200 ${errors.confirmPassword
+                ? 'border-red-500 focus:ring-red-500'
+                : 'border-gray-300 focus:ring-blue-500 focus:border-transparent'
+                }`}
               placeholder="Confirm your password"
             />
             {errors.confirmPassword && (
