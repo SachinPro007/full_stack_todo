@@ -1,13 +1,14 @@
 "use client"
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import SignIn from '../components/sign-in';
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
     email: '',
     password: ''
   });
-  
+
   const [serverResponse, setServerResponse] = useState({});
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
@@ -47,25 +48,25 @@ const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    
+
+
     if (!validateForm()) return;
 
     setIsLoading(true);
     const res = await fetch("/api/login", {
       method: "POST",
       headers: {
-        "Content-Type" : "application/json"
+        "Content-Type": "application/json"
       },
-      body: JSON.stringify({email: formData.email, password: formData.password})
+      body: JSON.stringify({ email: formData.email, password: formData.password })
     })
 
-    const data = await res.json()    
+    const data = await res.json()
 
     setServerResponse(data)
     setIsLoading(false);
 
-    if(data.success){
+    if (data.success) {
       router.push("/")
     }
 
@@ -83,6 +84,14 @@ const LoginPage = () => {
           </p>
         </div>
 
+        <SignIn />
+
+        <div className="relative flex items-center mt-6 w-[70%] mx-auto">
+          <div className="flex-grow border-t border-gray-300"></div>
+          <span className="flex-shrink mx-4 text-gray-500 text-sm">or</span>
+          <div className="flex-grow border-t border-gray-300"></div>
+        </div>
+
         {/* Login Form */}
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           {/* Email Field */}
@@ -96,11 +105,10 @@ const LoginPage = () => {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className={`text-gray-600 w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors duration-200 ${
-                errors.email 
-                  ? 'border-red-500 focus:ring-red-500' 
+              className={`text-gray-600 w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors duration-200 ${errors.email
+                  ? 'border-red-500 focus:ring-red-500'
                   : 'border-gray-300 focus:ring-blue-500 focus:border-transparent'
-              }`}
+                }`}
               placeholder="Enter your email"
             />
             {errors.email && (
@@ -119,11 +127,10 @@ const LoginPage = () => {
               name="password"
               value={formData.password}
               onChange={handleChange}
-              className={`text-gray-600 w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors duration-200 ${
-                errors.password 
-                  ? 'border-red-500 focus:ring-red-500' 
+              className={`text-gray-600 w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors duration-200 ${errors.password
+                  ? 'border-red-500 focus:ring-red-500'
                   : 'border-gray-300 focus:ring-blue-500 focus:border-transparent'
-              }`}
+                }`}
               placeholder="Enter your password"
             />
             {errors.password && (
@@ -140,7 +147,7 @@ const LoginPage = () => {
               />
               <span className="ml-2 text-sm text-gray-600">Remember me</span>
             </label>
-            
+
             <button
               type="button"
               className="text-sm text-blue-600 hover:text-blue-700 transition-colors duration-200"
