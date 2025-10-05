@@ -3,6 +3,7 @@ import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import UserProfile from './components/UserProfile';
 import Loading from './components/Loading';
+import DemoAccountNotice from './components/DemoAccountNotice';
 
 const TodoApp = () => {
   const route = useRouter()
@@ -12,7 +13,7 @@ const TodoApp = () => {
   const [editingId, setEditingId] = useState(null); // Track which todo is being edited
   const [editInput, setEditInput] = useState(""); // Store the edited text
   const [serverResponse, setServerResponse] = useState({})
-  
+
   const [loading, setLoading] = useState(true)
 
 
@@ -117,11 +118,14 @@ const TodoApp = () => {
   const completedCount = todos.filter(todo => todo.completed).length;
   const totalCount = todos.length;
 
-  if(loading) return <Loading />
+  if (loading) return <Loading />
 
   return (
     <div className=" flex justify-center items-center min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">
       <div className="container md:w-[60%] mx-auto bg-white rounded-2xl shadow-xl overflow-hidden">
+        <DemoAccountNotice userID={todos[0]?.userID}/>
+
+
         {/* Header */}
         <div className="bg-gradient-to-r from-blue-600 to-indigo-700 p-6 relative">
           <div className="flex items-center justify-between">
@@ -147,6 +151,7 @@ const TodoApp = () => {
           </div>
         </div>
 
+        
         {/* Add Todo Form */}
         <div className="p-6 border-b border-gray-200">
           <div className="flex gap-2">
@@ -181,8 +186,8 @@ const TodoApp = () => {
               key={filterType}
               onClick={() => setFilter(filterType)}
               className={`flex-1 py-3 text-sm font-medium transition-colors duration-200 cursor-pointer ${filter === filterType
-                  ? 'text-blue-600 border-b-2 border-blue-600'
-                  : 'text-gray-500 hover:text-gray-700'
+                ? 'text-blue-600 border-b-2 border-blue-600'
+                : 'text-gray-500 hover:text-gray-700'
                 }`}
             >
               {filterType.charAt(0).toUpperCase() + filterType.slice(1)}
@@ -208,8 +213,8 @@ const TodoApp = () => {
                       <button
                         onClick={() => toggleTodo(todo.id, todo.completed)}
                         className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors duration-200 cursor-pointer ${todo.completed
-                            ? 'bg-green-500 border-green-500 text-white'
-                            : 'border-gray-300 hover:border-green-500'
+                          ? 'bg-green-500 border-green-500 text-white'
+                          : 'border-gray-300 hover:border-green-500'
                           }`}
                       >
                         {todo.completed && (
@@ -246,8 +251,8 @@ const TodoApp = () => {
                       ) : (
                         <span
                           className={`text-lg flex-1 ${todo.completed
-                              ? 'line-through text-gray-400'
-                              : 'text-gray-700'
+                            ? 'line-through text-gray-400'
+                            : 'text-gray-700'
                             }`}
                         >
                           {todo.text}
@@ -262,8 +267,8 @@ const TodoApp = () => {
                           onClick={() => startEdit(todo)}
                           disabled={todo.completed}
                           className={`p-1 rounded transition-colors duration-200 cursor-pointer ${todo.completed
-                              ? 'text-gray-300 cursor-not-allowed'
-                              : 'text-gray-400 hover:text-blue-500'
+                            ? 'text-gray-300 cursor-not-allowed'
+                            : 'text-gray-400 hover:text-blue-500'
                             }`}
                           title={todo.completed ? "Cannot edit completed todo" : "Edit todo"}
                         >
