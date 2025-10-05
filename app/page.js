@@ -2,6 +2,7 @@
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import UserProfile from './components/UserProfile';
+import Loading from './components/Loading';
 
 const TodoApp = () => {
   const route = useRouter()
@@ -18,6 +19,7 @@ const TodoApp = () => {
   /////////////////// functions ///////////   
 
   const fetchTodos = async () => {
+    setLoading(true)
     const res = await fetch("/api/todos")
     const data = await res.json()
 
@@ -25,7 +27,7 @@ const TodoApp = () => {
       setServerResponse(data)
       route.push("/login")
     } else {
-      setTodos(data.reverse())
+      setTodos(data)
       setLoading(false)
     }
   }
@@ -114,6 +116,8 @@ const TodoApp = () => {
 
   const completedCount = todos.filter(todo => todo.completed).length;
   const totalCount = todos.length;
+
+  if(loading) return <Loading />
 
   return (
     <div className=" flex justify-center items-center min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">

@@ -23,6 +23,8 @@ export async function GET() {
 
 export async function POST(request) {
   const todo = await request.json()
+  console.log(todo);
+  
   const sessionID = await verifyCookie()
   
   if(sessionID instanceof Response){
@@ -31,14 +33,20 @@ export async function POST(request) {
 
   const [[userSession]] = await db.execute("SELECT * FROM session WHERE id = ?;", [sessionID])  
 
-  if(userSession){
-    const [[user]] = await db.execute("SELECT * FROM users WHERE id = ?;", [userSession.userID])
-    if(!user){
-      return Response.json({error: "Please Login"}, {status: 401})
-    }
-  }else{
-    return Response.json({error: "Your loggin session is expier, Please login first...!"}, {status: 401})
+  if(!userSession){
+    return Response.json({error: "Please Login"}, {status: 401})    
   }  
+
+  const [[user]] = await db.execute("SELECT * FROM users WHERE id = ?;", [userSession.userID])
+
+  if(!user){
+    const [[authUser]] = await db.execute("SELECT * FROM auth_users WHERE id = ?;", [userSession.userID])
+
+    if(!authUser){
+      return Response.json({error: "You are not valid User.... Please create Account first....!"}, {status: 401})
+    }
+  }
+
   
   const newTodo = {
     id: crypto.randomUUID(),

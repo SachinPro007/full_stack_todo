@@ -7,17 +7,14 @@ function UserProfile() {
   const route = useRouter();
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const [user, setUser] = useState({
-    user: {
-      name: "",
-      email: "",
-      image: "",
-    },
-    expires: "2025-11-03T09:45:36.919Z",
+    user_name: "",
+    email: "",
+    id: "",
   });
 
   const fetchUser = async () => {
     const res = await fetch("/api/user");
-    const data = await res.json();    
+    const data = await res.json();
 
     if (data.error) {
       route.push("/login");
@@ -45,22 +42,27 @@ function UserProfile() {
         onClick={() => setShowProfileDropdown(!showProfileDropdown)}
         className="flex items-center justify-center w-10 h-10 bg-blue-500 rounded-full hover:bg-blue-400 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-300"
       >
-        {user.user.image ? (
-          <Image src={user.user.image} alt={user.user.name} width={500} height={500}/>
-        ) : (
-        <svg
-          className="w-6 h-6 text-white"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+        {user.image ? (
+          <Image
+            src={user.image}
+            alt={user.user_name}
+            width={500}
+            height={500}
           />
-        </svg>
+        ) : (
+          <svg
+            className="w-6 h-6 text-white"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+            />
+          </svg>
         )}
       </button>
 
@@ -70,10 +72,10 @@ function UserProfile() {
           {/* User Info */}
           <div className="px-4 py-3 border-b border-gray-100">
             <p className="text-lg font-medium text-gray-900">
-              {user.user.name || "User Name"}
+              {user.user_name || "User Name"}
             </p>
             <p className="text-sm text-gray-500 truncate">
-              {user.user.email || "user@example.com"}
+              {user.email || "user@example.com"}
             </p>
           </div>
 
@@ -141,7 +143,7 @@ function UserProfile() {
                 // Handle logout
                 setShowProfileDropdown(false);
                 handleLogout();
-                await signOutAction()
+                await signOutAction();
               }}
               className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors duration-200"
             >
