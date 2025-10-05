@@ -61,8 +61,6 @@ To set up and run this application locally, you will need Node.js and either npm
 **Create .env file:**
 
   ```env
-  # HMAC_SECRET.....!
-  COOKIE_SECRET=add_here_secret_key_for_session_cookie_sign
   # Custom HMAC Key (used with crypto.createHmac for cookie signing)
   COOKIE_SECRET="VERY_LONG_AND_UNIQUE_SECRET"
 
