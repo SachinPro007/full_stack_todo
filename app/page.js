@@ -1,4 +1,4 @@
-"use client"
+'use client';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import UserProfile from './components/UserProfile';
@@ -6,57 +6,54 @@ import Loading from './components/Loading';
 import DemoAccountNotice from './components/DemoAccountNotice';
 
 const TodoApp = () => {
-  const route = useRouter()
+  const route = useRouter();
   const [todos, setTodos] = useState([]);
   const [inputValue, setInputValue] = useState('');
   const [filter, setFilter] = useState('all');
   const [editingId, setEditingId] = useState(null); // Track which todo is being edited
-  const [editInput, setEditInput] = useState(""); // Store the edited text
-  const [serverResponse, setServerResponse] = useState({})
+  const [editInput, setEditInput] = useState(''); // Store the edited text
+  const [serverResponse, setServerResponse] = useState({});
 
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true);
 
   /////////////////// functions ///////////   
 
   const fetchTodos = async () => {
-    setLoading(true)
-    const res = await fetch("/api/todos")
-    const data = await res.json()
+    setLoading(true);
+    const res = await fetch('/api/todos');
+    const data = await res.json();
 
     if (data.error) {
-      setServerResponse(data)
-      route.push("/login")
+      setServerResponse(data);
+      route.push('/login');
     } else {
-      setTodos(data)
-      setLoading(false)
+      setTodos(data);
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchTodos()
+    fetchTodos();
 
-    // 🛑 THIS IS THE FIX 🛑
-    // Suppresses the 'react-hooks/exhaustive-deps' warning for this line only.
-    // We are telling the linter that the empty array is intentional and safe.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, []);
 
   const addTodo = async () => {
     if (inputValue.trim() !== '') {
-      const res = await fetch("/api/todos", {
-        method: "POST",
+      const res = await fetch('/api/todos', {
+        method: 'POST',
         headers: {
-          "Content-Type": "Application/json"
+          'Content-Type': 'Application/json'
         },
         body: JSON.stringify({ text: inputValue })
-      })
-      const data = await res.json()
+      });
+      const data = await res.json();
       if (data.error) {
-        setServerResponse(data)
-        route.push("/login")
+        setServerResponse(data);
+        route.push('/login');
 
       } else {
-        setTodos([data, ...todos])
+        setTodos([data, ...todos]);
         setInputValue('');
       }
     }
@@ -64,22 +61,22 @@ const TodoApp = () => {
 
   const toggleTodo = async (id, completed) => {
     const res = await fetch(`/api/todos/${id}`, {
-      method: "PATCH",
+      method: 'PATCH',
       headers: {
-        "Content-Type": "application/json"
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({ completed: !completed })
-    })
+    });
 
-    const updatedTodo = await res.json()
-    setTodos(todos.map(todo => todo.id === id ? updatedTodo : todo))
+    const updatedTodo = await res.json();
+    setTodos(todos.map(todo => todo.id === id ? updatedTodo : todo));
   };
 
   const deleteTodo = async (id) => {
     await fetch(`/api/todos/${id}`, {
-      method: "DELETE",
-    })
-    setTodos(todos.filter(todo => todo.id !== id))
+      method: 'DELETE',
+    });
+    setTodos(todos.filter(todo => todo.id !== id));
   };
 
   // Start editing a todo
@@ -92,24 +89,24 @@ const TodoApp = () => {
   const saveEdit = async (id) => {
     if (editInput.trim() !== '') {
       const res = await fetch(`/api/todos/${id}`, {
-        method: "PATCH",
+        method: 'PATCH',
         headers: {
-          "Content-Type": "application/json"
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({ text: editInput })
-      })
+      });
 
-      const updatedTodo = await res.json()
-      setTodos(todos.map(todo => todo.id === id ? updatedTodo : todo))
+      const updatedTodo = await res.json();
+      setTodos(todos.map(todo => todo.id === id ? updatedTodo : todo));
       setEditingId(null);
-      setEditInput("");
+      setEditInput('');
     }
   };
 
   // Cancel editing
   const cancelEdit = () => {
     setEditingId(null);
-    setEditInput("");
+    setEditInput('');
   };
 
 
@@ -122,12 +119,12 @@ const TodoApp = () => {
   const completedCount = todos.filter(todo => todo.completed).length;
   const totalCount = todos.length;
 
-  if (loading) return <Loading />
+  if (loading) return <Loading />;
 
   return (
     <div className=" flex justify-center items-center min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">
       <div className="container md:w-[60%] mx-auto bg-white rounded-2xl shadow-xl overflow-hidden">
-        <DemoAccountNotice userID={todos[0]?.userID}/>
+        <DemoAccountNotice userID={todos[0]?.userID} />
 
 
         {/* Header */}
@@ -155,7 +152,7 @@ const TodoApp = () => {
           </div>
         </div>
 
-        
+
         {/* Add Todo Form */}
         <div className="p-6 border-b border-gray-200">
           <div className="flex gap-2">
@@ -206,7 +203,7 @@ const TodoApp = () => {
               <svg className="w-16 h-16 mx-auto text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
-              <p className="mt-2">{loading ? "Loading todos..." : "No tasks found"}</p>
+              <p className="mt-2">{loading ? 'Loading todos...' : 'No tasks found'}</p>
             </div>
           ) : (
             <ul className="divide-y divide-gray-200">
@@ -274,7 +271,7 @@ const TodoApp = () => {
                             ? 'text-gray-300 cursor-not-allowed'
                             : 'text-gray-400 hover:text-blue-500'
                             }`}
-                          title={todo.completed ? "Cannot edit completed todo" : "Edit todo"}
+                          title={todo.completed ? 'Cannot edit completed todo' : 'Edit todo'}
                         >
                           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />

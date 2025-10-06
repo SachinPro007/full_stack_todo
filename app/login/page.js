@@ -1,4 +1,4 @@
-"use client"
+'use client';
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import SignIn from '../components/sign-in';
@@ -53,21 +53,21 @@ const LoginPage = () => {
     if (!validateForm()) return;
 
     setIsLoading(true);
-    const res = await fetch("/api/login", {
-      method: "POST",
+    const res = await fetch('/api/login', {
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json"
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({ email: formData.email, password: formData.password })
-    })
+    });
 
-    const data = await res.json()
+    const data = await res.json();
 
-    setServerResponse(data)
+    setServerResponse(data);
     setIsLoading(false);
 
     if (data.success) {
-      router.push("/")
+      router.push('/');
     }
 
 
