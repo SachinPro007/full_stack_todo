@@ -16,7 +16,6 @@ const TodoApp = () => {
 
   const [loading, setLoading] = useState(true)
 
-
   /////////////////// functions ///////////   
 
   const fetchTodos = async () => {
@@ -31,10 +30,15 @@ const TodoApp = () => {
       setTodos(data)
       setLoading(false)
     }
-  }
+  };
 
   useEffect(() => {
     fetchTodos()
+
+    // 🛑 THIS IS THE FIX 🛑
+    // Suppresses the 'react-hooks/exhaustive-deps' warning for this line only.
+    // We are telling the linter that the empty array is intentional and safe.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const addTodo = async () => {
