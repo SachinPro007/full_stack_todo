@@ -61,7 +61,7 @@ function RegisterForm() {
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
-  }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -93,7 +93,7 @@ function RegisterForm() {
   // form validate with zod and resigter new user with server action
   const handleFormAction = async (formData) => {
     const { success, data, error } = registerSchema.safeParse(
-      Object.fromEntries(formData)
+      Object.fromEntries(formData),
     );
 
     if (!success) {

@@ -22,6 +22,7 @@
     "@tailwindcss/postcss": "^4",
     "eslint": "9.37.0",
     "eslint-config-next": "15.5.4",
+    "prettier": "3.6.2",
     "tailwindcss": "^4"
   }
 }

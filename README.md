@@ -60,26 +60,26 @@ To set up and run this application locally, you will need Node.js and either npm
 
 **Create .env file:**
 
-  ```env
-  # Custom HMAC Key (used with crypto.createHmac for cookie signing)
-  COOKIE_SECRET="VERY_LONG_AND_UNIQUE_SECRET"
+```env
+# Custom HMAC Key (used with crypto.createHmac for cookie signing)
+COOKIE_SECRET="VERY_LONG_AND_UNIQUE_SECRET"
 
-  # Database Connection
-  DB_HOST="..."
-  DB_USER="..."
-  DB_PASSWORD="..."
-  DB_DATABASE="..."
-  ```
+# Database Connection
+DB_HOST="..."
+DB_USER="..."
+DB_PASSWORD="..."
+DB_DATABASE="..."
+```
 
 **Create .env.local file:**
 
-  ```env.local
-  # AUTH.JS secret key.....
-  AUTH_SECRET=this_key_auto_genret_when_you_install_auth.js
+```env.local
+# AUTH.JS secret key.....
+AUTH_SECRET=this_key_auto_genret_when_you_install_auth.js
 
-  # Google OAuth (If using social login)
-  AUTH_GOOGLE_ID="..."
-  AUTH_GOOGLE_SECRET="..." 
+# Google OAuth (If using social login)
+AUTH_GOOGLE_ID="..."
+AUTH_GOOGLE_SECRET="..."
 ```
 
 ### Running Locally

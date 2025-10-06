@@ -1,12 +1,12 @@
-'use client';
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import SignIn from '../components/sign-in';
+"use client";
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import SignIn from "../components/sign-in";
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
-    email: '',
-    password: ''
+    email: "",
+    password: "",
   });
 
   const [serverResponse, setServerResponse] = useState({});
@@ -16,15 +16,15 @@ const LoginPage = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
     // Clear error when user starts typing
     if (errors[name]) {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
-        [name]: ''
+        [name]: "",
       }));
     }
   };
@@ -33,13 +33,13 @@ const LoginPage = () => {
     const newErrors = {};
 
     if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
+      newErrors.email = "Email is required";
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email is invalid';
+      newErrors.email = "Email is invalid";
     }
 
     if (!formData.password) {
-      newErrors.password = 'Password is required';
+      newErrors.password = "Password is required";
     }
 
     setErrors(newErrors);
@@ -49,16 +49,18 @@ const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-
     if (!validateForm()) return;
 
     setIsLoading(true);
-    const res = await fetch('/api/login', {
-      method: 'POST',
+    const res = await fetch("/api/login", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({ email: formData.email, password: formData.password })
+      body: JSON.stringify({
+        email: formData.email,
+        password: formData.password,
+      }),
     });
 
     const data = await res.json();
@@ -67,10 +69,8 @@ const LoginPage = () => {
     setIsLoading(false);
 
     if (data.success) {
-      router.push('/');
+      router.push("/");
     }
-
-
   };
 
   return (
@@ -78,7 +78,9 @@ const LoginPage = () => {
       <div className="container md:w-[50%] mx-auto bg-white rounded-2xl shadow-xl overflow-hidden">
         {/* Header */}
         <div className="bg-gradient-to-r from-blue-600 to-indigo-700 p-6">
-          <h1 className="text-3xl font-bold text-white text-center">Welcome Back</h1>
+          <h1 className="text-3xl font-bold text-white text-center">
+            Welcome Back
+          </h1>
           <p className="text-blue-200 text-center mt-2">
             Sign in to your account
           </p>
@@ -96,7 +98,10 @@ const LoginPage = () => {
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           {/* Email Field */}
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Email Address
             </label>
             <input
@@ -105,10 +110,11 @@ const LoginPage = () => {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className={`text-gray-600 w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors duration-200 ${errors.email
-                  ? 'border-red-500 focus:ring-red-500'
-                  : 'border-gray-300 focus:ring-blue-500 focus:border-transparent'
-                }`}
+              className={`text-gray-600 w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors duration-200 ${
+                errors.email
+                  ? "border-red-500 focus:ring-red-500"
+                  : "border-gray-300 focus:ring-blue-500 focus:border-transparent"
+              }`}
               placeholder="Enter your email"
             />
             {errors.email && (
@@ -118,7 +124,10 @@ const LoginPage = () => {
 
           {/* Password Field */}
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
               Password
             </label>
             <input
@@ -127,10 +136,11 @@ const LoginPage = () => {
               name="password"
               value={formData.password}
               onChange={handleChange}
-              className={`text-gray-600 w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors duration-200 ${errors.password
-                  ? 'border-red-500 focus:ring-red-500'
-                  : 'border-gray-300 focus:ring-blue-500 focus:border-transparent'
-                }`}
+              className={`text-gray-600 w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 transition-colors duration-200 ${
+                errors.password
+                  ? "border-red-500 focus:ring-red-500"
+                  : "border-gray-300 focus:ring-blue-500 focus:border-transparent"
+              }`}
               placeholder="Enter your password"
             />
             {errors.password && (
@@ -164,14 +174,30 @@ const LoginPage = () => {
           >
             {isLoading ? (
               <div className="flex items-center justify-center">
-                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                <svg
+                  className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
                 </svg>
                 Signing in...
               </div>
             ) : (
-              'Sign In'
+              "Sign In"
             )}
           </button>
 
@@ -180,8 +206,8 @@ const LoginPage = () => {
             type="button"
             onClick={() => {
               setFormData({
-                email: 'sachintesting@gmail.com',
-                password: 'demopassword123'
+                email: "sachintesting@gmail.com",
+                password: "demopassword123",
               });
             }}
             className="w-full py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors duration-200"
@@ -192,24 +218,28 @@ const LoginPage = () => {
           {/* Server Error Message */}
           {serverResponse.error && (
             <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-              <p className="text-red-600 text-sm text-center">{serverResponse.error}</p>
+              <p className="text-red-600 text-sm text-center">
+                {serverResponse.error}
+              </p>
             </div>
           )}
 
           {/* Server Success Message */}
           {serverResponse.success && (
             <div className="bg-green-50 border border-green-200 rounded-lg p-3">
-              <p className="text-green-600 text-sm text-center">{serverResponse.success}</p>
+              <p className="text-green-600 text-sm text-center">
+                {serverResponse.success}
+              </p>
             </div>
           )}
 
           {/* Registration Link */}
           <div className="text-center pt-4">
             <p className="text-gray-600">
-              Don&#39;t have an account?{' '}
+              Don&#39;t have an account?{" "}
               <button
                 type="button"
-                onClick={() => router.push('/register')}
+                onClick={() => router.push("/register")}
                 className="text-blue-600 hover:text-blue-700 font-medium"
               >
                 Sign up

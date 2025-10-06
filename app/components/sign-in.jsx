@@ -1,7 +1,6 @@
 import { signInAction } from "../actions/authAction";
 
 export default function SignIn() {
-
   return (
     <form action={signInAction}>
       <button

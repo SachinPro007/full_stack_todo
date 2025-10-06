@@ -1,8 +1,6 @@
 import { signOutAction } from "../actions/authAction";
 
-
 export default function SignInOut() {
-
   return (
     <form action={signOutAction}>
       <button
