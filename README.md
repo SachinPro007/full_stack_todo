@@ -21,6 +21,8 @@ The primary focus of this application is on **security, data isolation, and adva
 
 ### 💻 Application Architecture
 
+- **Code Quality Pipeline:** Implements **ESLint** (for fixing errors and learning code quality) and **Prettier** (as a dedicated formatter) for maintaining high-quality, consistent code across the entire project.
+- **Automated Code Checks:** Uses **Husky** with **`lint-staged`** to automatically lint and format *only the staged files* before every commit, ensuring clean code is always pushed to the repository.
 - **Next.js Full-Stack (v15.5.4):** Leverages the latest features of the App Router, including dedicated **Route Handlers** (`route.js`) for REST APIs and powerful **Server Actions** for form mutations and server-side data logic.
 - **Intelligent Middleware:** Custom Next.js Middleware redirects users based on their authentication state, preventing logged-in users from accessing authentication pages and protecting core pages from logged-out users.
 - **Reliable Data Validation:** Integrates **Zod** for powerful, schema-based validation on all incoming form data and API requests.
@@ -36,13 +38,15 @@ The primary focus of this application is on **security, data isolation, and adva
 
 ## 🛠️ Tech Stack
 
-| Category           | Technology                | Purpose                                                 |
-| :----------------- | :------------------------ | :------------------------------------------------------ |
-| **Framework**      | **Next.js 15.5.4**        | Full-stack architecture (App Router, Server Components) |
-| **Database**       | **MySQL**                 | Persistence layer (Hosted via TiDB Cloud)               |
-| **Authentication** | **Auth.js** (NextAuth.js) | Handles Google OAuth and base session flow              |
-| **Validation**     | **Zod**                   | Schema validation                                       |
-| **Security**       | **Bcrypt, createHmac**    | Password hashing and custom cookie signing              |
+| Category | Technology | Purpose |
+| :--- | :--- | :--- |
+| **Framework** | **Next.js 15.5.4** | Full-stack architecture (App Router, Server Components) |
+| **Database** | **MySQL** | Persistence layer (Hosted via TiDB Cloud) |
+| **Authentication** | **Auth.js** (NextAuth.js) | Handles Google OAuth and base session flow |
+| **Validation** | **Zod** | Schema validation |
+| **Security** | **Bcrypt, createHmac** | Password hashing and custom cookie signing |
+| **Code Quality** | **ESLint, Prettier** | Enforcing code consistency, auto-fixing errors, and formatting. |
+| **Git Workflow** | **Husky, lint-staged** | Automating pre-commit code quality checks. |
 
 ---
 
@@ -54,7 +58,7 @@ To set up and run this application locally, you will need Node.js and either npm
 
 1. Clone the Repository: Clone this repository and navigate into the project directory.
 
-2. Install Dependencies: Run your package manager's install command (npm install or yarn).
+2. Install Dependencies: Run your package manager's install command (`npm install` or `yarn`).
 
 3. Configure Environment: You must create a `.env` and `.env.local` file in the root directory and populate it with the following required credentials:
 
@@ -88,4 +92,15 @@ AUTH_GOOGLE_SECRET="..."
 npm run dev
 # or
 yarn dev
+```
+
+## Code Quality Scripts (For Contributors)
+To manually run the code quality checks or format the entire codebase:
+
+```bash
+# Lints and fixes errors across the entire codebase
+npm run lint:fix
+
+# Formats all files according to Prettier rules
+npm run format
 ```
