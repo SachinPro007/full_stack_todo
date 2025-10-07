@@ -11,7 +11,7 @@ const eslintConfig = [
     rules: {
       // "@next/next/no-img-element" : "error",
       // "@next/next/no-sync-scripts": "off",
-      // semi: 'error',
+      semi: 'error',
       // quotes: ['error', 'single']
     },
   }),
