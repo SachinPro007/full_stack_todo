@@ -16,10 +16,6 @@ const TodoApp = () => {
 
   const [loading, setLoading] = useState(true);
 
-  let message = "Sachin Sehrawat";
-  message = "Husky Setup Testing";
-  console.log(message);
-
   /////////////////// functions ///////////
 
   const fetchTodos = async () => {
